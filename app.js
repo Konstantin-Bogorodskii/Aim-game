@@ -3,14 +3,8 @@ const screens = document.querySelectorAll('.screen');
 const timeList = document.querySelector('#time-list');
 const gameTime = document.querySelector('#time');
 const board = document.querySelector('#board');
-const colors = [
-  '#ffe925',
-  '#63ff25',
-  '#25ffa4',
-  '#2583ff',
-  '#7125ff',
-  '#f12020',
-];
+const gameResetBtn = document.querySelector('.game__reset');
+const colors = ['#ffe925', '#63ff25', '#25ffa4', '#2583ff', '#7125ff', '#f12020'];
 let score = 0;
 
 btnStart.addEventListener('click', e => {
@@ -20,8 +14,12 @@ btnStart.addEventListener('click', e => {
 
 timeList.addEventListener('click', event => {
   if (event.target.classList.contains('time-btn')) {
+    clearGame();
+
     time = parseInt(event.target.getAttribute('data-time'));
     screens[1].classList.add('screen-up');
+    gameResetBtn.style.display = 'none';
+
     startGame();
   }
 });
@@ -34,22 +32,33 @@ board.addEventListener('click', event => {
   }
 });
 
+gameResetBtn.addEventListener('click', event => {
+  if (event.target.classList.contains('game__reset')) {
+    screens[1].classList.remove('screen-up');
+  }
+});
+
+function clearGame() {
+  board.innerHTML = '';
+  gameTime.parentNode.classList.remove('hide');
+  score = 0;
+}
+
 function startGame() {
   setTime(time);
   createRandomCircle();
-  setInterval(decreaseTime, 1000);
-}
-
-function decreaseTime() {
-  if (time === 0) {
-    finishGame();
-  } else {
-    let current = --time;
-    if (current < 10) {
-      current = `0${current}`;
+  let interval = setInterval(function decreaseTime() {
+    if (time === 0) {
+      finishGame();
+      clearInterval(interval);
+    } else {
+      let current = --time;
+      if (current < 10) {
+        current = `0${current}`;
+      }
+      setTime(current);
     }
-    setTime(current);
-  }
+  }, 1000);
 }
 
 function setTime(value) {
@@ -59,6 +68,7 @@ function setTime(value) {
 function finishGame() {
   gameTime.parentNode.classList.add('hide');
   board.innerHTML = `<h1>Cчет: <span class="primary">${score}</span></h1>`;
+  gameResetBtn.style.display = 'inline-block';
 }
 
 function createRandomCircle() {
