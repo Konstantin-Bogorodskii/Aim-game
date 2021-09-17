@@ -148,3 +148,23 @@ h1 {
 .game__reset:hover::before {
   width: 100%;
 }
+
+@media (max-width: 576px) {
+  .board {
+    width: 400px;
+    height: 400px;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 485px) {
+  .board {
+    width: 85%;
+    height: 400px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
